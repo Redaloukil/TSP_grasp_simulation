@@ -1,4 +1,5 @@
 const numberOfCities = 8;
+var greedyBestPath = [];
 
 const cities = [];
 
@@ -9,14 +10,6 @@ var city = {
         long :0,
 }
 
-
-function chooseToStart(){
-    
-}
-
-function grasp(){
-
-}
 
 function swap(a , i , j){
         var temp = a[i];
