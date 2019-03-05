@@ -1,4 +1,4 @@
-const numberOfCities = 10;
+const numberOfCities = 40;
 const alpha = 0.4;
 
 var cities = [];
@@ -139,7 +139,7 @@ function draw(){
     
     endShape();
 
-    cities = constructionPhase(cities)
+    
 
 }
 

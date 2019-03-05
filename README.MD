@@ -1,1 +1,2 @@
-<h1>Travel Salesman Problem using greedy </h1>
+<h1>Travel Salesman Problem using GRASP </h1>
+<img src="img/screen.png"/>
