@@ -1,7 +1,7 @@
-const numberOfCities = 20;
+const numberOfCities = 10;
 const alpha = 0.4;
 
-const cities = [];
+var cities = [];
 
 var bestPath = 0;
 
@@ -54,16 +54,18 @@ function randomSelection(rcl){
 
 //construct the solution phase 
 function constructionPhase(cities){
-    const solutionPath = [];
+    var solutionPath = [];
     var initialCity = cities[0];
-    solutionPath.push(cities[0]);
+    solutionPath.push({x:cities[0].x , y:cities[0].y , z :cities[0].z});
+    
 
     //delete the starting city
     cities.shift();
     var rcl = [];
-
-    while(initialCity != null){
-        //calculate min and max 
+    var counter = cities.length -1;
+    while(counter > 0){
+        
+        //calculate min and max     
         const min = calculateMin(initialCity , cities);
         const max = calculateMax(initialCity , cities);    
         
@@ -72,35 +74,35 @@ function constructionPhase(cities){
         rcl = [];
         
         //restricted candidate list 
-        for(var i = 0;i<cities.length;i++){
+        for(var i = 0; i<cities.length ;i++){
+
             const cost = calculateCost(initialCity , cities[i]);
-            console.log("calculated cost ",cost);
+            
             if(cost < alphaCost){
-                rcl.push({city:cities[i], index:i });
-                console.log("selected cost ",cost);
+                rcl.push({city:{x:cities[i].x , y:cities[i].y , z:cities[i].z} , index:i });
             }
+        
         }
         
         console.log("restricted candidate list" , rcl);
+        
         var randomIndex = randomSelection(rcl);
+        
         console.log("selected random index from rcl " , randomIndex);
-        solutionPath.push(rcl[randomIndex].city);
-        console.log("selected city : ",rcl[randomIndex].city);  
-        cities.splice(rcl[randomIndex].index - 1 , 1);
-        console.log("les cités restante : " , cities);
+        solutionPath.push({x:rcl[randomIndex].city.x , y:rcl[randomIndex].city.y , z:rcl[randomIndex].city.z});
+
+        console.log("selected city : ",{x:rcl[randomIndex].city.x , y:rcl[randomIndex].city.y , z:rcl[randomIndex].city.z});  
+
+        cities.splice(rcl[randomIndex].index , 1);
         console.log("path list" , solutionPath);
         
         rcl = [];
         
-        //get the index of the city removed from the city list
-        if(cities.length == 0){
-            initialCity = null;
-        }else {
-            initialCity = solutionPath[solutionPath.length-1];
-        }
+        counter--;
     }
     
     return solutionPath;
+    
 }
 
 function setup(){
@@ -111,7 +113,7 @@ function setup(){
         cities[i] = v;
     }
     
-    constructionPhase(cities);
+    cities = constructionPhase(cities);
 }
 
 function draw(){
@@ -130,11 +132,14 @@ function draw(){
     beginShape();
 
     noFill();
-        vertex(cities[0].x , cities[0].y);
-        vertex(cities[1].x , cities[1].y);
+    for (var i=0; i<cities.length; i++){
+        vertex(cities[i].x , cities[i].y);
+    }   
     
     
     endShape();
+
+    cities = constructionPhase(cities)
 
 }
 
