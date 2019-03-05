@@ -1,10 +1,9 @@
-const numberOfCities = 8;
+const numberOfCities = 20;
 const alpha = 0.4;
 
 const cities = [];
 
 var bestPath = 0;
-
 
 
 function calculateDistance(cities){
@@ -50,39 +49,57 @@ function calculateMax(initialCity , cities){
 
 //select randomly from the rcl
 function randomSelection(rcl){
-    const item = rcl[Math.floor(Math.random()*rcl.length)];
-    return item;
+    return Math.floor(Math.random()*rcl.length);
 }
 
 //construct the solution phase 
 function constructionPhase(cities){
-    const solutionPath = []
-    
+    const solutionPath = [];
+    var initialCity = cities[0];
     solutionPath.push(cities[0]);
+
     //delete the starting city
     cities.shift();
-    
-    while(cities.length !=0){
+    var rcl = [];
+
+    while(initialCity != null){
         //calculate min and max 
         const min = calculateMin(initialCity , cities);
         const max = calculateMax(initialCity , cities);    
+        
         //calculate alpha cost 
         const alphaCost = min + alpha*(max - min);
-        var rcl = [];
+        rcl = [];
+        
         //restricted candidate list 
         for(var i = 0;i<cities.length;i++){
             const cost = calculateCost(initialCity , cities[i]);
-            console.log("calculated cost ",cost)
+            console.log("calculated cost ",cost);
             if(cost < alphaCost){
-                rcl.push(cities[i]);
-                console.log("selected cost ",cost)
+                rcl.push({city:cities[i], index:i });
+                console.log("selected cost ",cost);
             }
-            
         }
-        console.log(rcl);
         
-        solutionPath.push(randomSelection(rcl));
+        console.log("restricted candidate list" , rcl);
+        var randomIndex = randomSelection(rcl);
+        console.log("selected random index from rcl " , randomIndex);
+        solutionPath.push(rcl[randomIndex].city);
+        console.log("selected city : ",rcl[randomIndex].city);  
+        cities.splice(rcl[randomIndex].index - 1 , 1);
+        console.log("les cités restante : " , cities);
+        console.log("path list" , solutionPath);
+        
+        rcl = [];
+        
+        //get the index of the city removed from the city list
+        if(cities.length == 0){
+            initialCity = null;
+        }else {
+            initialCity = solutionPath[solutionPath.length-1];
+        }
     }
+    
     return solutionPath;
 }
 
@@ -113,7 +130,8 @@ function draw(){
     beginShape();
 
     noFill();
-    
+        vertex(cities[0].x , cities[0].y);
+        vertex(cities[1].x , cities[1].y);
     
     
     endShape();
