@@ -69,7 +69,7 @@ function draw(){
     var i = floor(random(cities.length));
     var j = floor(random(cities.length));
 
-    swap(cities , i , j)
+    swap(cities , i , j);
 }
 
 

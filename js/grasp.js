@@ -1,16 +1,14 @@
-const numberOfCities = 40;
+const numberOfCities = 10;
 const alpha = 0.4;
 
 var cities = [];
 
 var bestPath = 0;
 
-
 function calculateDistance(cities){
     var distance = 0;
-    
-    for (var i = 0 ;i < cities.length -1; i++){
-        distance = distance + dist(cities[i].x , cities[i].y , cities[i+1].x , cities[i+1].y ) 
+    for (var i = 0 ; i < cities.length-1; i++){
+        distance = distance + dist(cities[i].x , cities[i].y , cities[i+1].x , cities[i+1].y) 
     } 
     
     return distance
@@ -45,6 +43,13 @@ function calculateMax(initialCity , cities){
     }
     return max;
 
+}
+
+function ZoptSwap(cities , i , k){
+    var temp = cities[i];
+    cities[i] = cities[k];
+    cities[k] = temp; 
+    return cities;
 }
 
 //select randomly from the rcl
@@ -106,7 +111,7 @@ function constructionPhase(cities){
 }
 
 function setup(){
-    createCanvas(600 , 600)
+    createCanvas(1000 , 1000)
    
     for (var i = 0; i<numberOfCities; i++){
         v = createVector(random(height) , random(width));
@@ -117,29 +122,46 @@ function setup(){
 }
 
 function draw(){
-    
-    frameRate(2)
+    var distance = 0;
+    frameRate(100)
     background(0);
     fill(255);
     
     for (var i=0; i<cities.length; i++){
+        
         ellipse(cities[i].x , cities[i].y , 6 , 6);
     }
 
-    stroke(255);
+    stroke(200);
     strokeWeight(2);
     
     beginShape();
 
     noFill();
-    for (var i=0; i<cities.length; i++){
+    
+    
+    for (var i=0; i<cities.length ; i++){
         vertex(cities[i].x , cities[i].y);
-    }   
+        
+    }
     
-    
-    endShape();
+    best_distance = calculateDistance(cities)
+    for (var i = 0; i< cities.length; i++) {
+        console.log(cities.length);
 
+        for (var k = i+1; k <cities.length; k++) {
+            new_route = ZoptSwap(cities, i, k);
+            new_distance = calculateDistance(cities);
+            if (new_distance < best_distance) {
+                cities = new_route;
+                best_distance = new_distance;
+                console.log(best_distance);
+            }
+        }
+    }
     
+
+    endShape();
 
 }
 
